@@ -3,16 +3,10 @@ import requests
 from dotenv import load_dotenv
 from typing import List
 
-# 1. Cargar variables de entorno al inicio (lee el archivo .env)
 load_dotenv()
 
 class MALClient:
-    """
-    Clase encargada de interactuar exclusivamente con la API de MyAnimeList.
-    """
-
     def __init__(self):
-        # Recuperamos la credencial del entorno. Si no existe, lanzamos error.
         self.client_id = os.getenv("MAL_CLIENT_ID")
         self.base_url = "https://api.myanimelist.net/v2"
 
@@ -21,45 +15,55 @@ class MALClient:
 
     def get_animes(self, username: str, status: str = "on_hold") -> List[str]:
         """
-        Obtiene la lista de animes de un usuario con un estado específico.
-        
-        Args:
-            username (str): Nombre de usuario en MAL.
-            status (str): Estado a filtrar ('on_hold', 'plan_to_watch', 'completed', etc).
-            
-        Returns:
-            List[str]: Lista con los títulos de los animes. Devuelve lista vacía si hay error.
+        Obtiene la lista COMPLETA de animes usando paginación.
         """
-        endpoint = f"{self.base_url}/users/{username}/animelist"
+        # URL inicial
+        url = f"{self.base_url}/users/{username}/animelist"
         
-        # Headers: Aquí es donde nos "identificamos" ante MAL
         headers = {
             "X-MAL-CLIENT-ID": self.client_id
         }
 
-        # Parameters: Configuración de la consulta
+        # Parámetros iniciales
         params = {
-            "status": status,
-            "limit": 1000,  # Pedimos un número alto para evitar paginación compleja
-            "fields": "num_episodes" # Podríamos pedir más datos aquí si quisiéramos
+            "limit": 1000, # Pedimos el máximo por página
+            "fields": "num_episodes"
         }
 
+        if status != "all":
+            params["status"] = status
+
+        animes_totales = []
+
         try:
-            print(f"📡 Consultando API para el usuario: {username}...")
-            response = requests.get(endpoint, headers=headers, params=params, timeout=10)
+            print(f"📡 Iniciando descarga para: {username} ({status})...")
             
-            # Si el código de respuesta es 4xx o 5xx, esto lanzará una excepción
-            response.raise_for_status()
-            
-            data = response.json()
-            
-            # Extracción limpia de datos usando List Comprehension
-            # Navegamos: data -> data -> node -> title
-            if 'data' in data:
-                titulos = [item['node']['title'] for item in data['data']]
-                return titulos
-            else:
-                return []
+            while True:
+                # Hacemos la petición
+                response = requests.get(url, headers=headers, params=params, timeout=10)
+                response.raise_for_status()
+                data = response.json()
+
+                if 'data' not in data:
+                    break
+
+                # Agregamos los resultados de esta página a nuestra lista maestra
+                nuevos_animes = [item['node']['title'] for item in data['data']]
+                animes_totales.extend(nuevos_animes)
+                print(f"   ...lote descargado: {len(nuevos_animes)} animes (Total parcial: {len(animes_totales)})")
+
+                # LÓGICA DE PAGINACIÓN
+                # La API nos dice si hay una página siguiente en data['paging']['next']
+                if "paging" in data and "next" in data["paging"]:
+                    url = data["paging"]["next"]
+                    # La URL 'next' ya trae sus propios parámetros, así que limpiamos los nuestros
+                    # para no duplicarlos o causar conflicto.
+                    params = {} 
+                else:
+                    # No hay más páginas, terminamos
+                    break
+
+            return animes_totales
 
         except requests.exceptions.HTTPError as e:
             print(f"⚠️ Error de HTTP: {e}")
@@ -68,17 +72,12 @@ class MALClient:
             print(f"⚠️ Error inesperado: {e}")
             return []
 
-# --- BLOQUE DE PRUEBA (Solo se ejecuta si corres este archivo directamente) ---
 if __name__ == "__main__":
-    # Prueba rápida para verificar que tu API Key funciona
-    # Cambia 'TU_USUARIO' por tu usuario real de MAL para probar ahora mismo
-    USER_TEST = "Aceme1pt" 
-    
+    USER_TEST = "Aceme1pt"
     try:
         client = MALClient()
-        animes = client.get_animes(USER_TEST, "on_hold")
-        print(f"✅ Éxito! Se encontraron {len(animes)} animes en 'On Hold'.")
-        if animes:
-            print(f"Ejemplo: {animes[0]}")
+        print("--- PRUEBA DE PAGINACIÓN (REMIX) ---")
+        animes = client.get_animes(USER_TEST, "all") 
+        print(f"✅ ÉXITO TOTAL! Se encontraron {len(animes)} animes.")
     except Exception as e:
         print(e)
