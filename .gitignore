@@ -10,3 +10,9 @@ __pycache__/
 
 # Ignorar configuraciones de VS Code (opcional, pero recomendado)
 .vscode/
+
+# PyInstaller
+*.spec
+build/
+dist/
+__pycache__/
