@@ -1,9 +1,19 @@
 import os
+import sys # <--- AGREGAR
 import requests
 from dotenv import load_dotenv
 from typing import List
 
-load_dotenv()
+# --- MISMA FUNCIÓN MAGICA ---
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+# Cargar variables de entorno buscando explícitamente en la ruta correcta
+load_dotenv(resource_path(".env"))
 
 class MALClient:
     def __init__(self):

@@ -4,17 +4,31 @@ import random
 import threading
 import winsound
 import os
+import sys  # <--- IMPORTANTE: AGREGAR ESTO
 from PIL import Image, ImageTk, ImageEnhance, ImageDraw
 
 try:
     from api_client import MALClient
 except ImportError:
+    # Ajuste para importar api_client tanto en dev como en exe
     import sys
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
     from api_client import MALClient
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
+# --- FUNCIÓN MAGICA PARA PYINSTALLER ---
+def resource_path(relative_path):
+    """ Obtiene la ruta absoluta al recurso, funciona para dev y para PyInstaller """
+    try:
+        # PyInstaller crea una carpeta temporal en _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+# --- CONFIGURACIÓN DE RUTAS ---
+# Usamos la nueva función para localizar la carpeta assets
+ASSETS_DIR = resource_path('assets')
 
 class AnimeRouletteApp:
     def __init__(self, root):
