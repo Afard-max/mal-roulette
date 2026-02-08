@@ -1,40 +1,52 @@
-# 🎲 MyAnimeList Roulette (Dark Edition v2.0)
+# 🎲 MyAnimeList Roulette (Dark Edition v3.0)
 
-Una aplicación de escritorio moderna y estética que selecciona aleatoriamente un anime de tu biblioteca de MyAnimeList. Ideal para combatir la indecisión de qué ver a continuación.
+A modern and aesthetic desktop application that randomly selects an anime from your MyAnimeList library. Perfect for fighting the indecision of what to watch next.
 
-**¡Nueva Versión 2.0!** Diseño Glassmorphism, soporte para todas las listas y modo Remix.
+**New Version 3.0!** Now available as a standalone Windows application (.exe). No Python installation required!
 
-## ✨ Características V2.0
+## 📥 Download (Windows)
 
-* **Integración API Avanzada:** Conecta con la API v2 de MyAnimeList. Soporta paginación automática para bibliotecas masivas (+1000 animes).
-* **Multi-Lista:** Elige entre:
+Don't have Python installed? No problem!
+**[Download the latest .exe installer here](https://github.com/Afard-max/mal-roulette/releases/tag/v3.0)**
+
+Just download, unzip, and double-click `app.exe` to start spinning!
+
+---
+
+## ✨ Features v3.0
+
+* **🚀 Portable Executable:** Run it instantly on Windows 10/11 without configuring environments or installing libraries.
+* **Advanced API Integration:** Connects to MyAnimeList API v2. Supports automatic pagination for massive libraries (1000+ animes).
+* **Multi-List Support:** Choose between:
     * On Hold
     * Plan to Watch
     * Currently Watching
     * Completed
     * Dropped
-    * **★ ALL LIST (Remix):** ¡Mezcla todo para una ruleta caótica!
-* **Interfaz "Glassmorphism":** Panel semitransparente sobre tu imagen de fondo personalizada.
+    * **★ ALL LIST (Remix):** Mix everything for a chaotic roulette!
+* **"Glassmorphism" Interface:** Semi-transparent panel overlaying your custom background.
 * **Smart UI:**
-    * **Botón RESET:** Limpia usuario y lista para nuevas búsquedas rápidas.
-    * **Botón COPY TITLE:** Aparece automáticamente al ganar para copiar el título.
-    * Mensajes de error visuales integrados (sin ventanas emergentes).
-    * Sonidos de ruleta y victoria.
+    * **RESET Button:** Quickly clears username and list for new searches.
+    * **COPY TITLE Button:** Automatically appears upon winning to copy the title to your clipboard.
+    * Integrated visual error messages (no annoying pop-ups).
+    * Sound effects for spinning and winning.
 
-## 🛠️ Instalación
+## 🛠️ Running from Source (For Developers)
 
-### Prerrequisitos
-* Python 3.8 o superior.
-* Cuenta de MyAnimeList.
+If you prefer to run the Python script directly or want to contribute:
 
-### Pasos
-1.  Clona este repositorio:
+### Prerequisites
+* Python 3.8 or higher.
+* A MyAnimeList Account.
+
+### Steps
+1.  Clone this repository:
     ```bash
     git clone [https://github.com/Afard-max/mal-roulette.git](https://github.com/Afard-max/mal-roulette.git)
     cd mal-roulette
     ```
 
-2.  Crea un entorno virtual e instala dependencias:
+2.  Create a virtual environment and install dependencies:
     ```bash
     python -m venv .venv
     # Windows:
@@ -45,25 +57,25 @@ Una aplicación de escritorio moderna y estética que selecciona aleatoriamente 
     pip install -r requirements.txt
     ```
 
-3.  **Configuración API:**
-    * Crea un archivo `.env` en la carpeta raíz.
-    * Añade tu Client ID de MAL:
+3.  **API Configuration:**
+    * Create a `.env` file in the root folder.
+    * Add your MAL Client ID:
         ```env
-        MAL_CLIENT_ID=tu_client_id_aqui
+        MAL_CLIENT_ID=your_client_id_here
         ```
 
-4.  Ejecuta:
+4.  Run the app:
     ```bash
     python src/app.py
     ```
 
-## 🎮 Uso
+## 🎮 Usage
 
-1.  Escribe un usuario de MyAnimeList.
-2.  Selecciona una lista del menú desplegable.
-3.  Presiona **SPIN ROULETTE**.
-4.  ¿Quieres cambiar de usuario? Presiona **RESET**.
+1.  Enter your **MyAnimeList username**.
+2.  Select a **List** from the dropdown menu (or choose "ALL LIST").
+3.  Press **SPIN ROULETTE**.
+4.  Want to try another user? Press **RESET**.
 
-## 👤 Autor
+## 👤 Author
 
-Desarrollado como proyecto de portafolio demostrando manejo de APIs, GUI (Tkinter + Pillow), Threading y Git Flow.
+Developed as a portfolio project demonstrating API handling, GUI design (Tkinter + Pillow), Threading, Git Flow, and Software Packaging (PyInstaller).
